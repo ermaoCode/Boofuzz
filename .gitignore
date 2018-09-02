@@ -9,3 +9,4 @@ testing/
 .cache
 .tox
 /Pipfile*
+/examples/boofuzz-run*

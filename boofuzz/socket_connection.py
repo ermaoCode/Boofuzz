@@ -58,7 +58,7 @@ class SocketConnection(itarget_connection.ITargetConnection):
         udp_broadcast (bool): Set to True to enable UDP broadcast. Must supply appropriate broadcast address for send() to
             work, and '' for bind host for recv() to work.
     """
-    _PROTOCOLS = ["tcp", "ssl", "udp", "raw-l2", "raw-l3"]
+    _PROTOCOLS = ["tcp", "ssl", "udp", "raw-l2", "raw-l3", "raw-tcp"]
     _PROTOCOLS_PORT_REQUIRED = ["tcp", "ssl", "udp"]
     MAX_PAYLOADS = {"raw-l2": 1514,
                     "raw-l3": 1500,
@@ -125,6 +125,9 @@ class SocketConnection(itarget_connection.ITargetConnection):
             self._sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
         elif self.proto == "raw-l3":
             self._sock = socket.socket(socket.AF_PACKET, socket.SOCK_DGRAM)
+        elif self.proto == "raw-tcp":
+            # based on IP ptorocol, and the proto is "tcp" in ip header
+            self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
         else:
             raise sex.SullyRuntimeError("INVALID PROTOCOL SPECIFIED: %s" % self.proto)
 
@@ -159,14 +162,17 @@ class SocketConnection(itarget_connection.ITargetConnection):
         try:
             if self.proto in ['tcp', 'ssl']:
                 data = self._sock.recv(max_bytes)
-            elif self.proto == 'udp':
+            # elif self.proto == 'udp':
+            elif self.proto == 'raw-tcp':
+                data = bytes('')
+            elif self.proto in ['udp']:
                 if self.bind:
                     data, _ = self._sock.recvfrom(max_bytes)
                 else:
                     raise sex.SullyRuntimeError(
                         "SocketConnection.recv() for UDP requires a bind address/port."
                         " Current value:".format(self.bind))
-            elif self.proto in ['raw-l2', 'raw-l3']:
+            elif self.proto in ['raw-l2', 'raw-l3', 'ip-raw']:
                 # receive on raw is not supported. Since there is no specific protocol for raw, we would just have to
                 # dump everything off the interface anyway, which is probably not what the user wants.
                 data = bytes('')
@@ -219,6 +225,8 @@ class SocketConnection(itarget_connection.ITargetConnection):
                 #                 Ethernet address)
                 # See man 7 packet for more details.
                 num_sent = self._sock.sendto(data, (self.host, self.ethernet_proto, 0, 0, self.l2_dst))
+            elif self.proto == "raw-tcp":
+                num_sent = self._sock.sendto(data, (self.host, self.port))
             else:
                 raise sex.SullyRuntimeError("INVALID PROTOCOL SPECIFIED: %s" % self.proto)
         except socket.error as e:

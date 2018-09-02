@@ -10,49 +10,34 @@ def main():
     """
     session = Session(
         target=Target(
-            connection=SocketConnection("127.0.0.1", 21, proto='tcp')))
+            connection=SocketConnection("7.7.7.7", 666, proto='raw-tcp')))
 
-    s_initialize("user")
-    s_string("USER")
-    s_delim(" ")
-    s_string("anonymous")
-    s_static("\r\n")
+    s_initialize("all")
+    # construct TCP header
+    s_word(0x51)   # src port
+    s_word(0x50)   # dst port
 
-    s_byte(123456)
-    s_byte(99999)
+    s_dword(0x1)   # seq number
+    s_dword(0x1)   # ack number
 
-    print s_get().render()
+    tcp_data_offset = 5
+    s_bit_field(tcp_data_offset, 4)  # header length
 
-    s_initialize("pass")
-    s_string("PASS")
-    s_delim(" ")
-    s_string("james")
-    s_static("\r\n")
+    s_bit_field(0x002, 12)  # flags  0000 0000 0010   syn
 
-    print s_get().render()
+    s_word(3000)  # window size
 
-    s_initialize("stor")
-    s_string("STOR")
-    s_delim(" ")
-    s_string("AAAA")
-    s_static("\r\n")
+    # TODO checksum
+    s_word(0)
 
-    print s_get().render()
+    s_word(0)     # urgent pointer
 
-    s_initialize("retr")
-    s_string("RETR")
-    s_delim(" ")
-    s_string("AAAA")
-    s_static("\r\n")
+    s_string("hello world")
 
-    print s_get().render()
 
-    # session.connect(s_get("user"))
-    # session.connect(s_get("user"), s_get("pass"))
-    # session.connect(s_get("pass"), s_get("stor"))
-    # session.connect(s_get("pass"), s_get("retr"))
-    #
-    # session.fuzz()
+
+    session.connect(s_get("all"))
+    session.fuzz()
 
 
 if __name__ == "__main__":

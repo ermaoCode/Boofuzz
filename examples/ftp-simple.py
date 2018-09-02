@@ -10,7 +10,7 @@ def main():
     """
     session = Session(
         target=Target(
-            connection=SocketConnection("127.0.0.1", 21, proto='tcp')))
+            connection=SocketConnection("127.0.0.1", 6666, proto='tcp')))
 
     s_initialize("user")
     s_string("USER")
@@ -47,12 +47,12 @@ def main():
 
     print s_get().render()
 
-    # session.connect(s_get("user"))
-    # session.connect(s_get("user"), s_get("pass"))
-    # session.connect(s_get("pass"), s_get("stor"))
-    # session.connect(s_get("pass"), s_get("retr"))
-    #
-    # session.fuzz()
+    session.connect(s_get("user"))
+    session.connect(s_get("user"), s_get("pass"))
+    session.connect(s_get("pass"), s_get("stor"))
+    session.connect(s_get("pass"), s_get("retr"))
+
+    session.fuzz()
 
 
 if __name__ == "__main__":
