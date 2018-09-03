@@ -14,17 +14,17 @@ def main():
 
     s_initialize("header")
 
-    s_word(0x01)
-    s_word(0x00)
+    s_word(0xe8)    # 2 byte: transaction id
+    s_word(0x00)    # 2 byte: protocol id
 
-    s_word(0x05)  # len
+    s_word(0x05)    # 2 byte: len
 
-    s_byte(0x01)  # unit id
+    s_byte(0x01)    # 1 byte: unit id
 
-    s_byte(0x03)  # func code
-    s_byte(0x02)  # word count
+    s_byte(0x03)    # 1 byte: func code
+    s_byte(0x02)    # 2 byte: word count
 
-    s_word(0x12312)
+    s_word(0x41c8)  # 2 byte: register
 
     print s_get().render()
 
