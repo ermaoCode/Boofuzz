@@ -58,7 +58,7 @@ class SocketConnection(itarget_connection.ITargetConnection):
         udp_broadcast (bool): Set to True to enable UDP broadcast. Must supply appropriate broadcast address for send() to
             work, and '' for bind host for recv() to work.
     """
-    _PROTOCOLS = ["tcp", "ssl", "udp", "raw-l2", "raw-l3", "raw-tcp"]
+    _PROTOCOLS = ["tcp", "ssl", "udp", "raw-l2", "raw-l3", "raw-tcp", "icmp"]
     _PROTOCOLS_PORT_REQUIRED = ["tcp", "ssl", "udp"]
     MAX_PAYLOADS = {"raw-l2": 1514,
                     "raw-l3": 1500,
@@ -128,6 +128,9 @@ class SocketConnection(itarget_connection.ITargetConnection):
         elif self.proto == "raw-tcp":
             # based on IP ptorocol, and the proto is "tcp" in ip header
             self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
+        elif self.proto == "icmp":
+            # based on IP ptorocol, and the proto is "tcp" in ip header
+            self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
         else:
             raise sex.SullyRuntimeError("INVALID PROTOCOL SPECIFIED: %s" % self.proto)
 
@@ -164,6 +167,8 @@ class SocketConnection(itarget_connection.ITargetConnection):
                 data = self._sock.recv(max_bytes)
             # elif self.proto == 'udp':
             elif self.proto == 'raw-tcp':
+                data = bytes('')
+            elif self.proto == 'icmp':
                 data = bytes('')
             elif self.proto in ['udp']:
                 if self.bind:
@@ -227,6 +232,8 @@ class SocketConnection(itarget_connection.ITargetConnection):
                 num_sent = self._sock.sendto(data, (self.host, self.ethernet_proto, 0, 0, self.l2_dst))
             elif self.proto == "raw-tcp":
                 num_sent = self._sock.sendto(data, (self.host, self.port))
+            elif self.proto == "icmp":
+                num_sent = self._sock.sendto(data, (self.host, 0))
             else:
                 raise sex.SullyRuntimeError("INVALID PROTOCOL SPECIFIED: %s" % self.proto)
         except socket.error as e:
