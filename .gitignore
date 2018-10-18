@@ -10,3 +10,4 @@ testing/
 .tox
 /Pipfile*
 /examples/boofuzz-run*
+/examples/
