@@ -290,13 +290,6 @@ class Session(pgraph.Graph):
                                 This is usually a helpful setting to enable, as targets may drop connections once a
                                 message is clearly invalid.
         target (Target):        Target for fuzz session. Target must be fully initialized. Default None.
-
-        log_level (int):        DEPRECATED Unused. Logger settings are now configured in fuzz_data_logger.
-                                Was once used to set the log level.
-        logfile (str):          DEPRECATED Unused. Logger settings are now configured in fuzz_data_logger.
-                                Was once the name of the log file.
-        logfile_level (int):    DEPRECATED Unused. Logger settings are now configured in fuzz_data_logger.
-                                Was once used to set the log level for the logfile. Default logger.INFO.
     """
 
     def __init__(self, session_filename=None, index_start=1, index_end=None, sleep_time=0.0,
@@ -309,7 +302,6 @@ class Session(pgraph.Graph):
                  fuzz_loggers=None,
                  receive_data_after_each_request=True,
                  check_data_received_each_request=False,
-                 log_level=logging.INFO, logfile=None, logfile_level=logging.DEBUG,
                  ignore_connection_reset=False,
                  ignore_connection_aborted=False,
                  ignore_connection_issues_when_sending_fuzz_data=True,
@@ -318,9 +310,6 @@ class Session(pgraph.Graph):
         self._ignore_connection_reset = ignore_connection_reset
         self._ignore_connection_aborted = ignore_connection_aborted
         self._ignore_connection_issues_when_sending_fuzz_data = ignore_connection_issues_when_sending_fuzz_data
-        _ = log_level
-        _ = logfile
-        _ = logfile_level
 
         super(Session, self).__init__()
 
