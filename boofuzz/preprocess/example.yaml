@@ -1,51 +1,51 @@
-test:
-  testname:"ftp-test"
-  session:
-    target-connection:
-      ip:"192.168.1.159"
-      port：80
-      protocol:"tcp"
-  status:
-  - status-name:"user"
-    primitives:
-    - type:"string"
-      value:"USER"
-      fuzzable:True
-      max_len:0
-    - type:"delim"
-      value:" "
-    - type:"string"
-      value:"anonymous"
-    - type:"static"
-      value:"anonymous"
-  - status-name:"pass"
-    primitives:
-    - type:"string"
-      value:"PASS"
-    - type:"delim"
-      value:" "
-    - type:"string"
-      value:"james"
-    - type:"static"
-      value:"\r\n"
-  - status-name:"stor"
-    primitives:
-      - type:"string"
-        value:"STOR"
-      - type:"delim"
-        value:" "
-      - type:"string"
-        value:"AAAA"
-      - type:"static"
-        value:"\r\n"
-  - status-name:"retr"
-    primitives:
-    - type:"string"
-      value:"RETR"
-    - type:"delim"
-      value:" "
-    - type:"string"
-      value:"AAAA"
-    - type:"static"
-      value:"\r\n"
+
+testname: "ftp-test"
+session:
+  targetconnection:
+    ip: "192.168.1.159"
+    port: 80
+    protocol: "tcp"
+status:
+- statusname: "user"
+  primitives:
+  - type: "string"
+    value: "USER"
+    fuzzable: True
+    max_len: 0
+  - type: "delim"
+    value: " "
+  - type: "string"
+    value: "anonymous"
+  - type: "static"
+    value: "anonymous"
+- statusname: "pass"
+  primitives:
+  - type: "string"
+    value: "PASS"
+  - type: "delim"
+    value: " "
+  - type: "string"
+    value: "james"
+  - type: "static"
+    value: "\r\n"
+- statusname: "stor"
+  primitives:
+    - type: "string"
+      value: "STOR"
+    - type: "delim"
+      value: " "
+    - type: "string"
+      value: "AAAA"
+    - type: "static"
+      value: "\r\n"
+- statusname: "retr"
+  primitives:
+  - type: "string"
+    value: "RETR"
+  - type: "delim"
+    value: " "
+  - type: "string"
+    value: "AAAA"
+  - type: "static"
+    value: "\r\n"
 
