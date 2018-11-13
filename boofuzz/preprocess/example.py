@@ -16,12 +16,14 @@ def main():
     # print f.read()
     y = yaml.load(f.read())
     # print y
+    logfile = open("./logfile.txt", "w+")
     try:
         session = Session(
             target=Target(
                 connection=SocketConnection(y["session"]["targetconnection"]["ip"],
                                             y["session"]["targetconnection"]["port"],
-                                            proto=y["session"]["targetconnection"]["protocol"])))
+                                            proto=y["session"]["targetconnection"]["protocol"])),
+            fuzz_loggers = [fuzz_logger_text.FuzzLoggerText(file_handle=logfile)])
         pre_status = ""
 
         for status in y["status"]:
