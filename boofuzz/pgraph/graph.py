@@ -514,10 +514,10 @@ class Graph(object):
         dot_graph = pydot.Dot()
 
         for node in self.nodes.values():
-            dot_graph.add_node(node.render_node_graphviz(self))
+            dot_graph.add_node(node.render_node_graphviz())
 
         for edge in self.edges.values():
-            dot_graph.add_edge(edge.render_edge_graphviz(self))
+            dot_graph.add_edge(edge.render_edge_graphviz())
 
         return dot_graph
 

@@ -1,0 +1,261 @@
+{
+  test : {
+    "testname" : "ftp-test",
+    "timestamp" : 1543494978003,
+    "session" : {
+      "target" : {
+        "ip" : "192.168.1.159",
+        "port" : 80,
+        "protocol" : "TCP"
+      }
+    },
+    "status" : [{
+      "status_name" : "user",
+      "blocks" : [{
+        "block_name" : "b1",
+        "block_item" : [[{
+          "name" : "primitive-type",
+          "type" : "static",
+          "default_value" : "static"
+        }, {
+          "name" : "primitive-value",
+          "type" : "string",
+          "default_value" : "USER"
+        }], [{
+          "name" : "primitive-type",
+          "type" : "static",
+          "default_value" : "delim"
+        }, {
+          "name" : "primitive-value",
+          "type" : "string",
+          "default_value" : " "
+        }, {
+          "name" : "fuzzable",
+          "type" : "enum",
+          "enum-list" : ["True",
+            "False"],
+          "default_value" : "True"
+        }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "delim"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : " "
+          }, {
+            "name" : "fuzzable",
+            "type" : "enum",
+            "enum-list" : ["True", "False"],
+            "default_value" : "True"
+          }]]
+      }, {
+        "block_name" : "b2",
+        "block_item" : [[{
+          "name" : "primitive-type",
+          "type" : "static",
+          "default_value" : "string"
+        }, {
+          "name" : "primitive-value",
+          "type" : "string",
+          "default_value" : "anonymous"
+        }, {
+          "name" : "fuzzable",
+          "type" : "enum",
+          "enum-list" : ["True", "False"],
+          "default_value" : "True"
+        }, {
+          "name" : "max-length",
+          "type" : "digit",
+          "default_value" : "100"
+        }, {
+          "name" : "fuzzing-type",
+          "type" : "static",
+          "default_value" : "fuzz library"
+        }]]
+      }
+
+      ]
+    }, {
+      "status_name" : "pass",
+      "blocks" : [{
+        "block_name" : "b1",
+        "block_item" : [[{
+          "name" : "primitive-type",
+          "type" : "static",
+          "default_value" : "static"
+        }, {
+          "name" : "primitive-value",
+          "type" : "string",
+          "default_value" : "PASS"
+        }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "delim"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : " "
+          }, {
+            "name" : "fuzzable",
+            "type" : "enum",
+            "enum-list" : ["True", "False"],
+            "default_value" : "True"
+          }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "string"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : "james"
+          }, {
+            "name" : "fuzzable",
+            "type" : "enum",
+            "enum-list" : ["True", "False"],
+            "default_value" : "True"
+          }, {
+            "name" : "max-length",
+            "type" : "digit",
+            "default_value" : "100"
+          }, {
+            "name" : "fuzzing-type",
+            "type" : "static",
+            "default_value" : "fuzz library"
+          }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "static"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : "\r\n"
+          }]
+        ]
+      }]
+    }, {
+      "status_name" : "stor",
+      "blocks" : [{
+        "block_name" : "b1",
+        "block_item" : [[{
+          "name" : "primitive-type",
+          "type" : "static",
+          "default_value" : "static"
+        }, {
+          "name" : "primitive-value",
+          "type" : "string",
+          "default_value" : "STOR"
+        }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "delim"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : " "
+          }, {
+            "name" : "fuzzable",
+            "type" : "enum",
+            "enum-list" : ["True", "False"],
+            "default_value" : "True"
+          }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "string"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : "AAAA"
+          }, {
+            "name" : "fuzzable",
+            "type" : "enum",
+            "enum-list" : ["True", "False"],
+            "default_value" : "True"
+          }, {
+            "name" : "max-length",
+            "type" : "digit",
+            "default_value" : "100"
+          }, {
+            "name" : "fuzzing-type",
+            "type" : "static",
+            "default_value" : "fuzz library"
+          }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "static"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : "\r\n"
+          }]
+        ]
+      }]
+    }, {
+      "status_name" : "retr",
+      "blocks" : [{
+        "block_item" : [[{
+          "name" : "primitive-type",
+          "type" : "static",
+          "default_value" : "static"
+        }, {
+          "name" : "primitive-value",
+          "type" : "string",
+          "default_value" : "RETR"
+        }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "delim"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : " "
+          }, {
+            "name" : "fuzzable",
+            "type" : "enum",
+            "enum-list" : ["True", "False"],
+            "default_value" : "True"
+          }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "string"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : "james"
+          }, {
+            "name" : "fuzzable",
+            "type" : "enum",
+            "enum-list" : ["True", "False"],
+            "default_value" : "True"
+          }, {
+            "name" : "max-length",
+            "type" : "digit",
+            "default_value" : "100"
+          }, {
+            "name" : "fuzzing-type",
+            "type" : "static",
+            "default_value" : "fuzz library"
+          }],
+          [{
+            "name" : "primitive-type",
+            "type" : "static",
+            "default_value" : "static"
+          }, {
+            "name" : "primitive-value",
+            "type" : "string",
+            "default_value" : "\r\n"
+          }]
+        ]
+      }]
+    }]
+  }
+}

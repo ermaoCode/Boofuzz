@@ -8,10 +8,8 @@ session:
 status:
 - statusname: "user"
   primitives:
-  - type: "string"
+  - type: "static"
     value: "USER"
-    fuzzable: True
-    max_len: 0
   - type: "delim"
     value: " "
   - type: "string"
@@ -20,7 +18,7 @@ status:
     value: "anonymous"
 - statusname: "pass"
   primitives:
-  - type: "string"
+  - type: "static"
     value: "PASS"
   - type: "delim"
     value: " "
