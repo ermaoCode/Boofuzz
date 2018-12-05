@@ -9,5 +9,8 @@ testing/
 .cache
 .tox
 /Pipfile*
-/examples/boofuzz-run*
 /examples/
+boofuzz-run*
+*.ipynb*
+logfile.txt
+autofuzzer*

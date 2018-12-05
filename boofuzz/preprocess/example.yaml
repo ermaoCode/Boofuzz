@@ -2,8 +2,8 @@
 testname: "ftp-test"
 session:
   targetconnection:
-    ip: "192.168.1.159"
-    port: 80
+    ip: "127.0.0.1"
+    port: 21
     protocol: "tcp"
 status:
 - statusname: "user"
