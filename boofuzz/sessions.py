@@ -326,8 +326,10 @@ class Session(pgraph.Graph):
             raise sex.BoofuzzError('Session fuzz_data_logger is deprecated. Use fuzz_loggers instead!')
         if fuzz_loggers is None:
             fuzz_loggers = [fuzz_logger_text.FuzzLoggerText()]
-        self._db_logger = fuzz_logger_db.FuzzLoggerDb()
-        self._fuzz_data_logger = fuzz_logger.FuzzLogger(fuzz_loggers=[self._db_logger] + fuzz_loggers)
+        # self._db_logger = fuzz_logger_db.FuzzLoggerDb()
+        # self._fuzz_data_logger = fuzz_logger.FuzzLogger(fuzz_loggers=[self._db_logger] + fuzz_loggers)
+        self._db_logger = None
+        self._fuzz_data_logger = fuzz_logger.FuzzLogger(fuzz_loggers=fuzz_loggers)
         self._check_data_received_each_request = check_data_received_each_request
         self._receive_data_after_each_request = receive_data_after_each_request
         self._skip_current_node_after_current_test_case = False
@@ -1338,7 +1340,7 @@ class Session(pgraph.Graph):
 
         test_case_name = "{0}.{1}.{2}".format(message_path, primitive_under_test, self.fuzz_node.mutant_index)
 
-        self._fuzz_data_logger.open_test_case("{0}: {1}".format(self.total_mutant_index, test_case_name),
+        self._fuzz_data_logger.open_test_case("{0}/{1}".format(self.total_mutant_index, self.total_num_mutations),
                                               name=test_case_name, index=self.total_mutant_index)
 
         self._fuzz_data_logger.log_info(

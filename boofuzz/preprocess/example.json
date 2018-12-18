@@ -4,9 +4,9 @@
     "timestamp" : 1543494978003,
     "session" : {
       "target" : {
-        "ip" : "192.168.1.159",
-        "port" : 80,
-        "protocol" : "TCP"
+        "ip" : "127.0.0.1",
+        "port" : 21,
+        "protocol" : "tcp"
       }
     },
     "status" : [{

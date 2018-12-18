@@ -30,7 +30,7 @@ class FuzzLoggerText(ifuzz_logger_backend.IFuzzLoggerBackend):
     DEFAULT_TEST_CASE_ID = "DefaultTestCase"
     INDENT_SIZE = 2
 
-    def __init__(self, file_handle=sys.stdout, bytes_to_str=DEFAULT_HEX_TO_STR):
+    def __init__(self, file_handle=sys.stdout, bytes_to_str=DEFAULT_HEX_TO_STR, colored = False):
         """
         :type file_handle: io.FileIO
         :param file_handle: Open file handle for logging. Defaults to sys.stdout.
@@ -40,6 +40,19 @@ class FuzzLoggerText(ifuzz_logger_backend.IFuzzLoggerBackend):
         """
         self._file_handle = file_handle
         self._format_raw_bytes = bytes_to_str
+
+        self._colored = colored
+        if not self._colored:
+            FuzzLoggerText.TEST_CASE_FORMAT = "Test Case: {0}"
+            FuzzLoggerText.TEST_STEP_FORMAT = "Test Step: {0}"
+            FuzzLoggerText.LOG_ERROR_FORMAT = "Error!!!! {0}"
+            FuzzLoggerText.LOG_CHECK_FORMAT = "Check: {0}"
+            FuzzLoggerText.LOG_INFO_FORMAT = "Info: {0}"
+            FuzzLoggerText.LOG_PASS_FORMAT = "Check OK: {0}"
+            FuzzLoggerText.LOG_FAIL_FORMAT = "Check Failed: {0}"
+            FuzzLoggerText.LOG_RECV_FORMAT = "Received: {0}"
+            FuzzLoggerText.LOG_SEND_FORMAT = "Transmitting {0} bytes: {1}"
+            FuzzLoggerText.DEFAULT_TEST_CASE_ID = "DefaultTestCase"
 
     def open_test_step(self, description):
         self._print_log_msg(self.TEST_STEP_FORMAT.format(description),
@@ -79,5 +92,7 @@ class FuzzLoggerText(ifuzz_logger_backend.IFuzzLoggerBackend):
                             msg_type='pass')
 
     def _print_log_msg(self, msg, msg_type):
+        if not self._colored:
+            msg_type='info'
         print(helpers.format_log_msg(msg_type=msg_type, description=msg, indent_size=self.INDENT_SIZE),
               file=self._file_handle)

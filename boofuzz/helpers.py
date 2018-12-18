@@ -31,8 +31,10 @@ test_step_info = {
     'info': {
         'indent': 2,
         'title': 'Info',
-        'html': 'Info: {msg}',
-        'terminal': "Info: {msg}",
+        # 'html': 'Info: {msg}',
+        # 'terminal': "Info: {msg}",
+        'html': '{msg}',
+        'terminal': "{msg}",
         'css_class': 'log-info'
     },
     'error': {

@@ -18,6 +18,8 @@ from .fuzz_logger import FuzzLogger
 from .fuzz_logger_text import FuzzLoggerText
 from .fuzz_logger_csv import FuzzLoggerCsv
 from .fuzz_logger_file import FuzzLoggerFile
+from .fuzz_logger_html_table import FuzzLoggerHtmlTable
+from .fuzz_logger_json import FuzzLoggerJson
 from .ifuzz_logger import IFuzzLogger
 from .ifuzz_logger_backend import IFuzzLoggerBackend
 from .itarget_connection import ITargetConnection

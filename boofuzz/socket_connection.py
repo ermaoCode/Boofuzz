@@ -75,7 +75,8 @@ class SocketConnection(itarget_connection.ITargetConnection):
                  recv_timeout=5.0,
                  ethernet_proto=ETH_P_IP,
                  l2_dst='\xFF' * 6,
-                 udp_broadcast=False):
+                 udp_broadcast=False,
+                 bind_ip = None):
         self.MAX_PAYLOADS["udp"] = helpers.get_max_udp_size()
 
         self.host = host
@@ -89,6 +90,7 @@ class SocketConnection(itarget_connection.ITargetConnection):
         self._udp_broadcast = udp_broadcast
 
         self._sock = None
+        self._bind_ip = bind_ip
 
         if self.proto not in self._PROTOCOLS:
             raise sex.SullyRuntimeError("INVALID PROTOCOL SPECIFIED: %s" % self.proto)
@@ -115,10 +117,11 @@ class SocketConnection(itarget_connection.ITargetConnection):
         # Create socket
         if self.proto == "tcp" or self.proto == "ssl":
             self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        elif self.proto == "udp":
-            self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             if self.bind:
                 self._sock.bind(self.bind)
+
+        elif self.proto == "udp":
+            self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             if self._udp_broadcast:
                 self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, True)
         elif self.proto == "raw-l2":
