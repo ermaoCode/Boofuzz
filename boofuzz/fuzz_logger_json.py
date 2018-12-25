@@ -80,7 +80,7 @@ class FuzzLoggerJson(ifuzz_logger_backend.IFuzzLoggerBackend):
     def log_error(self, description):
         self.prev_result["result"] = "fail"
         self.json_result['testAll'] += 1
-        self.json_result['testPass'] += 1
+        self.json_result['testFail'] += 1
         self.print_case(self.prev_result)
         self.print_finish()
 
