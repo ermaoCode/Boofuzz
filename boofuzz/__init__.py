@@ -30,6 +30,7 @@ from .serial_connection import SerialConnection
 from .sessions import Session, Target, open_test_run
 from .sex import SullyRuntimeError, SizerNotUtilizedError, MustImplementException
 from .socket_connection import SocketConnection
+from .target_discover import check_target
 
 __version__ = '0.0.13'
 

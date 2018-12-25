@@ -21,6 +21,7 @@ from . import ifuzz_logger
 from . import pgraph
 from . import primitives
 from . import sex
+from . import target_discover
 from .web.app import app
 
 DEFAULT_MAX_RECV = 8192
@@ -625,8 +626,12 @@ class Session(pgraph.Graph):
             self.export_file()
             raise
         except sex.BoofuzzTargetConnectionFailedError:
+            dst_ip = self.targets[0]._target_connection.host
+            dst_port = self.targets[0]._target_connection.port
+            res, res_str = target_discover.check_target(dst_ip, dst_port)
+
             self._fuzz_data_logger.log_error(
-                "Cannot connect to target; target presumed down."
+                res_str +
                 " Note: Normally a failure should be detected, and the target reset."
                 " This error may mean you have no restart method configured, or your error"
                 " detection is not working.")

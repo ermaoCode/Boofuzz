@@ -64,33 +64,31 @@ def main():
     if (args.bindip and args.bindip != "0"):
         bind = (args.bindip, 0)
 
-
+    # load json script
     y = {}
     with open(args.script) as f:
         y = json.load(f)
-
     # transmit unicode to str
     y = byteify(y)
 
+    # init loggers
+    # txt logger
     fuzz_loggers = []
-
     logfile = open(args.logtxt, "w+")
     fuzz_loggers.append(fuzz_logger_text.FuzzLoggerText(file_handle=logfile))
-
-    # fuzz_loggers = [fuzz_logger_text.FuzzLoggerText()]
+    # html table logger
     report_name = args.logtxt
     if report_name.find('/') != -1:
         report_name = report_name[report_name.rindex('/')+1:]
-
     fuzz_loggers.append(fuzz_logger_html_table.FuzzLoggerHtmlTable(report_name=report_name))
-
-    if (args.jsonlog):
-        jsonfile = open(args.jsonlog, "w+")
-        fuzz_loggers.append(fuzz_logger_json.FuzzLoggerJson(file_handle=jsonfile, report_name=report_name))
+    # json data logger
+    if args.jsonlog:
+        json_log_file = open(args.jsonlog, "w+")
+        fuzz_loggers.append(fuzz_logger_json.FuzzLoggerJson(file_handle=json_log_file, report_name=report_name))
 
     try:
         port = y["test"]["session"]["target"]["port"]
-        if type(port) is types.StringType:
+        if isinstance(port, str):
             port = int(port)
         session = Session(
             target=Target(
@@ -98,7 +96,8 @@ def main():
                                             port,
                                             proto=y["test"]["session"]["target"]["protocol"],
                                             bind=bind)),
-            fuzz_loggers = fuzz_loggers)
+            fuzz_loggers = fuzz_loggers,
+            sleep_time=1.0)
         pre_status = ""
 
         for status in y["test"]["status"]:
