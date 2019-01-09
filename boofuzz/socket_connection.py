@@ -68,14 +68,15 @@ class SocketConnection(itarget_connection.ITargetConnection):
 
     def __init__(self,
                  host,
-                 port=None,
+                 port=0,
                  proto="tcp",
                  bind=None,
                  send_timeout=5.0,
                  recv_timeout=5.0,
                  ethernet_proto=ETH_P_IP,
                  l2_dst='\xFF' * 6,
-                 udp_broadcast=False):
+                 udp_broadcast=False,
+                 ip_header_proto_num=0):
         self.MAX_PAYLOADS["udp"] = helpers.get_max_udp_size()
 
         self.host = host
@@ -84,6 +85,7 @@ class SocketConnection(itarget_connection.ITargetConnection):
         self._recv_timeout = recv_timeout
         self._send_timeout = send_timeout
         self.proto = proto.lower()
+        self.ip_header_proto_num = ip_header_proto_num
         self.ethernet_proto = ethernet_proto
         self.l2_dst = l2_dst
         self._udp_broadcast = udp_broadcast
@@ -126,12 +128,15 @@ class SocketConnection(itarget_connection.ITargetConnection):
             self._sock = socket.socket(socket.AF_PACKET, socket.SOCK_RAW)
         elif self.proto == "raw-l3":
             self._sock = socket.socket(socket.AF_PACKET, socket.SOCK_DGRAM)
-        elif self.proto == "raw-tcp":
-            # based on IP ptorocol, and the proto is "tcp" in ip header
-            self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
-        elif self.proto == "icmp":
-            # based on IP ptorocol, and the proto is "tcp" in ip header
-            self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+        # elif self.proto == "raw-tcp":
+        #     # based on IP protocol, and the proto is "tcp" in ip header
+        #     self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
+        # elif self.proto == "icmp":
+        #     # based on IP protocol, and the proto is "tcp" in ip header
+        #     self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+        elif self.proto == "ip":
+            self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, self.ip_header_proto_num)
+
         else:
             raise sex.SullyRuntimeError("INVALID PROTOCOL SPECIFIED: %s" % self.proto)
 
@@ -168,9 +173,11 @@ class SocketConnection(itarget_connection.ITargetConnection):
             if self.proto in ['tcp', 'ssl']:
                 data = self._sock.recv(max_bytes)
             # elif self.proto == 'udp':
-            elif self.proto == 'raw-tcp':
-                data = bytes('')
-            elif self.proto == 'icmp':
+            # elif self.proto == 'raw-tcp':
+            #     data = bytes('')
+            # elif self.proto == 'icmp':
+            #     data = bytes('')
+            elif self.proto == 'ip':
                 data = bytes('')
             elif self.proto in ['udp']:
                 if self.bind:
@@ -232,10 +239,12 @@ class SocketConnection(itarget_connection.ITargetConnection):
                 #                 Ethernet address)
                 # See man 7 packet for more details.
                 num_sent = self._sock.sendto(data, (self.host, self.ethernet_proto, 0, 0, self.l2_dst))
-            elif self.proto == "raw-tcp":
+            # elif self.proto == "raw-tcp":
+            #     num_sent = self._sock.sendto(data, (self.host, self.port))
+            # elif self.proto == "icmp":
+            #     num_sent = self._sock.sendto(data, (self.host, 0))
+            elif self.proto == "ip":
                 num_sent = self._sock.sendto(data, (self.host, self.port))
-            elif self.proto == "icmp":
-                num_sent = self._sock.sendto(data, (self.host, 0))
             else:
                 raise sex.SullyRuntimeError("INVALID PROTOCOL SPECIFIED: %s" % self.proto)
         except socket.error as e:
