@@ -5,15 +5,7 @@ import json
 import sys
 import argparse
 import traceback
-import types
 
-def addPrimitive(primitive):
-    if primitive["type"] == "string":
-        s_string(primitive["value"])
-    elif primitive["type"] == "delim":
-        s_delim(primitive["value"])
-    elif primitive["type"] == "static":
-        s_static(primitive["value"])
 
 def get_priAttr_by_name(primitive, name):
     for primitive_attribute in primitive:
@@ -22,25 +14,52 @@ def get_priAttr_by_name(primitive, name):
     print "primitive-type '%s' not found "% (name)
     sys.exit()
 
-def addStatus(status):
+
+def add_primitive(primitive):
+    # get the "primitive-type" element of this primitive
+    attr = get_priAttr_by_name(primitive["primitive"], "primitive-type")
+
+    if attr["default_value"] == "static":
+        s_static(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"])
+    elif attr["default_value"] == "delim":
+        s_delim(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
+                fuzzable=(get_priAttr_by_name(primitive["primitive"], "fuzzable")["default_value"] == "True"))
+    elif attr["default_value"] == "string":
+        s_string(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
+                 fuzzable=(get_priAttr_by_name(primitive["primitive"], "fuzzable")["default_value"] == "True"),
+                 max_len=get_priAttr_by_name(primitive["primitive"], "max-length")["default_value"])
+    elif attr["default_value"] == "byte":
+        s_string(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
+                size=get_priAttr_by_name(primitive["primitive"], "width")["default_value"])
+        # s_bit_field(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
+        #             width=8*get_priAttr_by_name(primitive["primitive"], "width")["default_value"])
+    elif attr["default_value"] == "random_data":
+        s_random(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
+                 min_length=get_priAttr_by_name(primitive["primitive"], "min-width")["default_value"],
+                 max_length=get_priAttr_by_name(primitive["primitive"], "max-width")["default_value"],
+                 num_mutations=get_priAttr_by_name(primitive["primitive"], "max-mutation")["default_value"])
+    elif attr["default_value"] == "checksum_field":
+        s_checksum(get_priAttr_by_name(primitive["primitive"], "target-block")["default_value"],
+                   algorithm=get_priAttr_by_name(primitive["primitive"], "checksum-algorithm")["default_value"],
+                   endian=">")
+    elif attr["default_value"] == "length_field":
+        s_size(get_priAttr_by_name(primitive["primitive"], "target-block")["default_value"],
+               offset=get_priAttr_by_name(primitive["primitive"], "offset")["default_value"],
+               length=get_priAttr_by_name(primitive["primitive"], "width")["default_value"],
+               endian=">")
+
+
+def add_status(status):
     s_initialize(status["status_name"])
-    for block in status["blocks"]:
-        if s_block_start(block["block_name"]):
-            for primitive in block["block_item"]:
-                attr = get_priAttr_by_name(primitive["primitive"], "primitive-type")
+    if s_block_start("total"):
+        for block in status["blocks"]:
+            if s_block_start(block["block_name"]):
+                for primitive in block["block_item"]:
+                    add_primitive(primitive)
+            s_block_end()
+    s_block_end()
 
-                if attr["default_value"] == "static":
-                    s_static(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"])
-                elif attr["default_value"] == "delim":
-                    s_delim(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
-                            fuzzable=(get_priAttr_by_name(primitive["primitive"], "fuzzable")["default_value"] == "True"))
-                elif attr["default_value"] == "string":
-                    s_string(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
-                             fuzzable=(get_priAttr_by_name(primitive["primitive"], "fuzzable")["default_value"] == "True"),
-                             max_len=get_priAttr_by_name(primitive["primitive"], "max-length")["default_value"])
-
-        s_block_end()
-
+# Recursively transmit object to utf-8
 def byteify(input):
     if isinstance(input, dict):
         return {byteify(key):byteify(value) for key,value in input.iteritems()}
@@ -51,10 +70,11 @@ def byteify(input):
     else:
         return input
 
+
 def main():
     parser = argparse.ArgumentParser(description='A amazing fuzzing tools.')
-    parser.add_argument('--script', '-s', dest="script", help = 'fuzzingScript.json path')
-    parser.add_argument('--logtxtpath', '-t', dest="logtxt", help = 'log.txt file path', default="log.txt")
+    parser.add_argument('script', help = 'fuzzingScript.json path')
+    parser.add_argument('--logtxtpath', '-t', dest="logtxt", help = 'log.txt file path')
     # parser.add_argument('--loghtmlpath', '-x', dest="loghtml", help = 'log.html file path')
     parser.add_argument('--jsonlogpath', '-j', dest="jsonlog", help = 'log.json file path')
     parser.add_argument('--bindip', '-b', dest="bindip", help = 'ip address for sending')
@@ -74,13 +94,14 @@ def main():
     # init loggers
     # txt logger
     fuzz_loggers = []
-    logfile = open(args.logtxt, "w+")
-    fuzz_loggers.append(fuzz_logger_text.FuzzLoggerText(file_handle=logfile))
-    # html table logger
-    report_name = args.logtxt
-    if report_name.find('/') != -1:
-        report_name = report_name[report_name.rindex('/')+1:]
-    fuzz_loggers.append(fuzz_logger_html_table.FuzzLoggerHtmlTable(report_name=report_name))
+    if args.logtxt:
+        logfile = open(args.logtxt, "w+")
+        fuzz_loggers.append(fuzz_logger_text.FuzzLoggerText(file_handle=logfile))
+        # html table logger
+        report_name = args.logtxt
+        if report_name.find('/') != -1:
+            report_name = report_name[report_name.rindex('/')+1:]
+        fuzz_loggers.append(fuzz_logger_html_table.FuzzLoggerHtmlTable(report_name=report_name))
     # json data logger
     if args.jsonlog:
         json_log_file = open(args.jsonlog, "w+")
@@ -88,6 +109,7 @@ def main():
 
     try:
         port = y["test"]["session"]["target"]["port"]
+        ip_p = y["test"]["session"]["target"]["ip_p"]
         if isinstance(port, str):
             port = int(port)
         session = Session(
@@ -95,13 +117,14 @@ def main():
                 connection=SocketConnection(y["test"]["session"]["target"]["ip"],
                                             port,
                                             proto=y["test"]["session"]["target"]["protocol"],
-                                            bind=bind)),
+                                            bind=bind,
+                                            ip_header_proto_num=ip_p)),
             fuzz_loggers = fuzz_loggers,
             sleep_time=1.0)
         pre_status = ""
 
         for status in y["test"]["status"]:
-            addStatus(status)
+            add_status(status)
 
         for status in y["test"]["status"]:
             if pre_status == "":

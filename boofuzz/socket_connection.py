@@ -58,7 +58,7 @@ class SocketConnection(itarget_connection.ITargetConnection):
         udp_broadcast (bool): Set to True to enable UDP broadcast. Must supply appropriate broadcast address for send() to
             work, and '' for bind host for recv() to work.
     """
-    _PROTOCOLS = ["tcp", "ssl", "udp", "raw-l2", "raw-l3", "raw-tcp", "icmp"]
+    _PROTOCOLS = ["tcp", "ssl", "udp", "raw-l2", "raw-l3", "ip"]
     _PROTOCOLS_PORT_REQUIRED = ["tcp", "ssl", "udp"]
     MAX_PAYLOADS = {"raw-l2": 1514,
                     "raw-l3": 1500,
@@ -135,6 +135,7 @@ class SocketConnection(itarget_connection.ITargetConnection):
         #     # based on IP protocol, and the proto is "tcp" in ip header
         #     self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
         elif self.proto == "ip":
+            print self.ip_header_proto_num
             self._sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, self.ip_header_proto_num)
 
         else:

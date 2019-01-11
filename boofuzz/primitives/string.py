@@ -47,6 +47,7 @@ class String(BasePrimitive):
         self._name = name
         self.this_library = \
             [
+                self._value,
                 self._value * 2,
                 self._value * 10,
                 self._value * 100,
@@ -283,7 +284,7 @@ class String(BasePrimitive):
                 return False
 
             # update the current value from the fuzz library.
-            self._value = (self._fuzz_library + self.this_library)[self._mutant_index]
+            self._value = (self.this_library + self._fuzz_library)[self._mutant_index]
 
             # increment the mutation count.
             self._mutant_index += 1
