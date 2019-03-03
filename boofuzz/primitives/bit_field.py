@@ -81,10 +81,12 @@ class BitField(BasePrimitive):
 
         assert isinstance(self.max_num, (int, long)), "max_num must be an integer!"
 
+        self._fuzz_library_generator = 0
+
         if self.full_range:
             # add all possible values.
-            for i in range(0, self.max_num):
-                self._fuzz_library.append(i)
+            self._fuzz_library_generator = self.infinite_fuzz_data_generator()  # use generator to save memory usage
+
         else:
             if type(value) in [list, tuple]:
                 # Use the supplied values as the fuzz library.
@@ -101,11 +103,20 @@ class BitField(BasePrimitive):
                 self.add_integer_boundaries(self.max_num / 32)
                 self.add_integer_boundaries(self.max_num)
 
+            self._fuzz_library_generator = self.fuzz_data_generator()  # use generator to save memory usage
             # TODO: Add injectable arbitrary bit fields
 
     @property
     def name(self):
         return self._name
+
+    def fuzz_data_generator(self):
+        for i in self._fuzz_library:
+            yield i
+
+    def infinite_fuzz_data_generator(self):
+        for i in range(0, self.max_num):
+            yield i
 
     def add_integer_boundaries(self, integer):
         """
