@@ -207,3 +207,9 @@ class BitField(BasePrimitive):
         :return: True
         """
         return True
+
+    def num_mutations(self):
+        if self.full_range:
+            return self.max_num
+        else:
+            return len(self._fuzz_library)

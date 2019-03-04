@@ -299,7 +299,6 @@ class Session(pgraph.Graph):
                  crash_threshold_request=12,
                  crash_threshold_element=3,
                  restart_sleep_time=5,
-                 fuzz_data_logger=None,
                  fuzz_loggers=None,
                  receive_data_after_each_request=True,
                  check_data_received_each_request=False,
@@ -323,9 +322,7 @@ class Session(pgraph.Graph):
         self._crash_threshold_node = crash_threshold_request
         self._crash_threshold_element = crash_threshold_element
         self.restart_sleep_time = restart_sleep_time
-        if fuzz_data_logger is not None:
-            raise sex.BoofuzzError('Session fuzz_data_logger is deprecated. Use fuzz_loggers instead!')
-        if fuzz_loggers is None:
+        if fuzz_loggers is None or len(fuzz_loggers) == 0:
             fuzz_loggers = [fuzz_logger_text.FuzzLoggerText()]
         # self._db_logger = fuzz_logger_db.FuzzLoggerDb()
         # self._fuzz_data_logger = fuzz_logger.FuzzLogger(fuzz_loggers=[self._db_logger] + fuzz_loggers)

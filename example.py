@@ -29,10 +29,11 @@ def add_primitive(primitive):
                  fuzzable=(get_priAttr_by_name(primitive["primitive"], "fuzzable")["default_value"] == "True"),
                  max_len=get_priAttr_by_name(primitive["primitive"], "max-length")["default_value"])
     elif attr["default_value"] == "byte":
-        s_string(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
-                size=get_priAttr_by_name(primitive["primitive"], "width")["default_value"])
-        # s_bit_field(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
-        #             width=8*get_priAttr_by_name(primitive["primitive"], "width")["default_value"])
+        # s_string(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
+        #         size=get_priAttr_by_name(primitive["primitive"], "width")["default_value"])
+        s_bit_field(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
+                    width=8*get_priAttr_by_name(primitive["primitive"], "width")["default_value"],
+                    full_range=(get_priAttr_by_name(primitive["primitive"], "fuzzing-type")["default_value"]=="exhaustive"))
     elif attr["default_value"] == "random_data":
         s_random(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
                  min_length=get_priAttr_by_name(primitive["primitive"], "min-width")["default_value"],
@@ -44,7 +45,7 @@ def add_primitive(primitive):
                    endian=">")
     elif attr["default_value"] == "length_field":
         s_size(get_priAttr_by_name(primitive["primitive"], "target-block")["default_value"],
-               offset=get_priAttr_by_name(primitive["primitive"], "offset")["default_value"],
+               # offset=get_priAttr_by_name(primitive["primitive"], "offset")["default_value"],  # use block name to verify
                length=get_priAttr_by_name(primitive["primitive"], "width")["default_value"],
                endian=">")
 
@@ -96,15 +97,21 @@ def main():
     fuzz_loggers = []
     if args.logtxt:
         logfile = open(args.logtxt, "w+")
+
+        # common format
         fuzz_loggers.append(fuzz_logger_text.FuzzLoggerText(file_handle=logfile))
         # html table logger
         report_name = args.logtxt
         if report_name.find('/') != -1:
             report_name = report_name[report_name.rindex('/')+1:]
+
+        # HTML table format output, used for result displaying
         fuzz_loggers.append(fuzz_logger_html_table.FuzzLoggerHtmlTable(report_name=report_name))
     # json data logger
     if args.jsonlog:
         json_log_file = open(args.jsonlog, "w+")
+
+        # json format output, used for result analysing
         fuzz_loggers.append(fuzz_logger_json.FuzzLoggerJson(file_handle=json_log_file, report_name=report_name))
 
     try:
