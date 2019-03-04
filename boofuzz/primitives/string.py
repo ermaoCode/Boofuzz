@@ -39,9 +39,11 @@ class String(BasePrimitive):
         self._value = self._original_value
         self.size = size
         self.max_len = max_len
+        self.padding = padding
         if self.size > -1:
             self.max_len = self.size
-        self.padding = padding
+            if len(self._value)<self.size:
+                self._value = self.padding * (self.size - len(self._value)) + self._value
         self.encoding = encoding
         self._fuzzable = fuzzable
         self._name = name
