@@ -57,7 +57,7 @@ Installation
 ::
 
     pip install boofuzz
-    pyinstaller -F example.py -n autofuzzer
+    pyinstaller -F main.py -n autofuzzer
 
 Boofuzz installs as a Python library used to build fuzzer scripts. See
 `INSTALL.rst`_ for advanced and detailed instructions.

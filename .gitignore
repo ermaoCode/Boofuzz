@@ -14,3 +14,4 @@ boofuzz-run*
 logfile.txt
 autofuzzer*
 log.*
+cluster_1.json
