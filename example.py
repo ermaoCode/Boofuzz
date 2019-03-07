@@ -74,16 +74,21 @@ def byteify(input):
 
 def main():
     parser = argparse.ArgumentParser(description='A amazing fuzzing tools.')
-    parser.add_argument('script', help = 'fuzzingScript.json path')
-    parser.add_argument('--logtxtpath', '-t', dest="logtxt", help = 'log.txt file path')
-    # parser.add_argument('--loghtmlpath', '-x', dest="loghtml", help = 'log.html file path')
-    parser.add_argument('--jsonlogpath', '-j', dest="jsonlog", help = 'log.json file path')
-    parser.add_argument('--bindip', '-b', dest="bindip", help = 'ip address for sending')
+    parser.add_argument('script', help='FuzzingScript.json path')
+    parser.add_argument('--txtlog', help='Text format logging file path, used for displaying and searching detail')
+    parser.add_argument('--jsonlog', help='Json format logging file path, used for generation HTML page')
+    parser.add_argument('--bindip', help='Ip address for sending')
+    parser.add_argument("--onlygenerate", help="A flag, if you turn it on, it will only generate test cases " +
+                                               "rather then run the whole test", action="store_true")
     args = parser.parse_args()
 
     bind = None
     if (args.bindip and args.bindip != "0"):
         bind = (args.bindip, 0)
+
+    only_generate = 0
+    if args.onlygenerate:
+        only_generate = 1
 
     # load json script
     y = {}
@@ -95,13 +100,13 @@ def main():
     # init loggers
     # txt logger
     fuzz_loggers = []
-    if args.logtxt:
-        logfile = open(args.logtxt, "w+")
+    if args.txtlog:
+        logfile = open(args.txtlog, "w+")
 
         # common format
         fuzz_loggers.append(fuzz_logger_text.FuzzLoggerText(file_handle=logfile))
         # html table logger
-        report_name = args.logtxt
+        report_name = args.txtlog
         if report_name.find('/') != -1:
             report_name = report_name[report_name.rindex('/')+1:]
 
@@ -113,6 +118,9 @@ def main():
 
         # json format output, used for result analysing
         fuzz_loggers.append(fuzz_logger_json.FuzzLoggerJson(file_handle=json_log_file, report_name=report_name))
+
+    if not fuzz_loggers:
+        fuzz_loggers = [fuzz_logger_text.FuzzLoggerText(file_handle=sys.stdout)]
 
     try:
         port = y["test"]["session"]["target"]["port"]
@@ -141,10 +149,14 @@ def main():
                 session.connect(pre_status, s_get(status["status_name"]))
                 pre_status = status["status_name"]
 
-        session.fuzz()
+        if not only_generate:
+            session.fuzz()
+        else:
+            print session.num_mutations()
     except Exception as e:
         print "error: " + str(e)
         traceback.print_exc()
+
 
 if __name__ == "__main__":
     main()
