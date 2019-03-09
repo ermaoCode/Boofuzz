@@ -213,3 +213,23 @@ class BitField(BasePrimitive):
             return self.max_num
         else:
             return len(self._fuzz_library)
+
+    def mutate(self):
+        fuzz_complete = False
+        # if we've ran out of mutations, raise the completion flag.
+        if self._mutant_index == self.num_mutations():
+            self._fuzz_complete = True
+            fuzz_complete = True
+
+        # if fuzzing was disabled or complete, and mutate() is called, ensure the original value is restored.
+        if not self._fuzzable or fuzz_complete:
+            self._value = self._original_value
+            return False
+
+        # update the current value from the fuzz library.
+        self._value = self._fuzz_library_generator.next()
+
+        # increment the mutation count.
+        self._mutant_index += 1
+
+        return True
