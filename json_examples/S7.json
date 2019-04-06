@@ -4,7 +4,7 @@
       {
         "blocks": [
           {
-            "block_name": "b0",
+            "block_name": "b1",
             "block_item": [
               {
                 "primitive": [
@@ -14,72 +14,7 @@
                     "name": "primitive-type"
                   },
                   {
-                    "default_value": "\u0000",
-                    "type": "string",
-                    "name": "primitive-value"
-                  },
-                  {
-                    "default_value": 1,
-                    "type": "static",
-                    "name": "width"
-                  }
-                ]
-              },
-              {
-                "primitive": [
-                  {
-                    "default_value": "byte",
-                    "type": "static",
-                    "name": "primitive-type"
-                  },
-                  {
-                    "default_value": 209,
-                    "type": "digit",
-                    "name": "primitive-value"
-                  },
-                  {
-                    "default_value": "True",
-                    "type": "enum",
-                    "name": "fuzzable",
-                    "enum_list": [
-                      "True",
-                      "False"
-                    ]
-                  },
-                  {
-                    "default_value": 1,
-                    "type": "digit",
-                    "name": "width"
-                  },
-                  {
-                    "default_value": "BIG_ENDIAN",
-                    "type": "enum",
-                    "name": "endian",
-                    "enum_list": [
-                      "BIG_ENDIAN",
-                      "LITTLE_ENDIAN"
-                    ]
-                  },
-                  {
-                    "default_value": "exhaustive",
-                    "type": "enum",
-                    "name": "fuzzing-type",
-                    "enum_list": [
-                      "exhaustive",
-                      "sampling"
-                    ]
-                  }
-                ]
-              },
-              {
-                "primitive": [
-                  {
-                    "default_value": "static",
-                    "type": "static",
-                    "name": "primitive-type"
-                  },
-                  {
-                    "default_value": "\u0000\u0000",
+                    "default_value": "\u0003\u0000",
                     "type": "string",
                     "name": "primitive-value"
                   },
@@ -98,7 +33,7 @@
                     "name": "primitive-type"
                   },
                   {
-                    "default_value": "b0",
+                    "default_value": "b1",
                     "type": "static",
                     "name": "target-block"
                   },
@@ -108,17 +43,12 @@
                     "name": "width"
                   },
                   {
-                    "default_value": 6,
+                    "default_value": 0,
                     "type": "static",
                     "name": "offset"
                   }
                 ]
-              }
-            ]
-          },
-          {
-            "block_name": "b1",
-            "block_item": [
+              },
               {
                 "primitive": [
                   {
@@ -127,12 +57,12 @@
                     "name": "primitive-type"
                   },
                   {
-                    "default_value": "\u0001\u0003",
+                    "default_value": "\u0002\u00f0\u0080\u0032\u0001\u0000\u0000\u0000\u0001\u0000\u000e\u0000",
                     "type": "string",
                     "name": "primitive-value"
                   },
                   {
-                    "default_value": 2,
+                    "default_value": 12,
                     "type": "static",
                     "name": "width"
                   }
@@ -146,7 +76,7 @@
                     "name": "primitive-type"
                   },
                   {
-                    "default_value": 131073,
+                    "default_value": 12,
                     "type": "digit",
                     "name": "primitive-value"
                   },
@@ -160,7 +90,7 @@
                     ]
                   },
                   {
-                    "default_value": 3,
+                    "default_value": 1,
                     "type": "digit",
                     "name": "width"
                   },
@@ -174,7 +104,137 @@
                     ]
                   },
                   {
-                    "default_value": "exhaustive",
+                    "default_value": "sampling",
+                    "type": "enum",
+                    "name": "fuzzing-type",
+                    "enum_list": [
+                      "exhaustive",
+                      "sampling"
+                    ]
+                  }
+                ]
+              },
+              {
+                "primitive": [
+                  {
+                    "default_value": "static",
+                    "type": "static",
+                    "name": "primitive-type"
+                  },
+                  {
+                    "default_value": "\u0005\u0001\u0012\n\u0010\u0002\u0000",
+                    "type": "string",
+                    "name": "primitive-value"
+                  },
+                  {
+                    "default_value": 7,
+                    "type": "static",
+                    "name": "width"
+                  }
+                ]
+              },
+              {
+                "primitive": [
+                  {
+                    "default_value": "byte",
+                    "type": "static",
+                    "name": "primitive-type"
+                  },
+                  {
+                    "default_value": 8,
+                    "type": "digit",
+                    "name": "primitive-value"
+                  },
+                  {
+                    "default_value": "True",
+                    "type": "enum",
+                    "name": "fuzzable",
+                    "enum_list": [
+                      "True",
+                      "False"
+                    ]
+                  },
+                  {
+                    "default_value": 1,
+                    "type": "digit",
+                    "name": "width"
+                  },
+                  {
+                    "default_value": "BIG_ENDIAN",
+                    "type": "enum",
+                    "name": "endian",
+                    "enum_list": [
+                      "BIG_ENDIAN",
+                      "LITTLE_ENDIAN"
+                    ]
+                  },
+                  {
+                    "default_value": "sampling",
+                    "type": "enum",
+                    "name": "fuzzing-type",
+                    "enum_list": [
+                      "exhaustive",
+                      "sampling"
+                    ]
+                  }
+                ]
+              },
+              {
+                "primitive": [
+                  {
+                    "default_value": "static",
+                    "type": "static",
+                    "name": "primitive-type"
+                  },
+                  {
+                    "default_value": "\u0000\u0000\u0083\u0000\u0003 \u0000\u0004",
+                    "type": "string",
+                    "name": "primitive-value"
+                  },
+                  {
+                    "default_value": 8,
+                    "type": "static",
+                    "name": "width"
+                  }
+                ]
+              },
+              {
+                "primitive": [
+                  {
+                    "default_value": "byte",
+                    "type": "static",
+                    "name": "primitive-type"
+                  },
+                  {
+                    "default_value": 77371252455336267181195264,
+                    "type": "digit",
+                    "name": "primitive-value"
+                  },
+                  {
+                    "default_value": "True",
+                    "type": "enum",
+                    "name": "fuzzable",
+                    "enum_list": [
+                      "True",
+                      "False"
+                    ]
+                  },
+                  {
+                    "default_value": 13,
+                    "type": "digit",
+                    "name": "width"
+                  },
+                  {
+                    "default_value": "BIG_ENDIAN",
+                    "type": "enum",
+                    "name": "endian",
+                    "enum_list": [
+                      "BIG_ENDIAN",
+                      "LITTLE_ENDIAN"
+                    ]
+                  },
+                  {
+                    "default_value": "sampling",
                     "type": "enum",
                     "name": "fuzzing-type",
                     "enum_list": [
@@ -238,16 +298,16 @@
         "status_name": "DefaultStatus"
       }
     ],
-    "timestamp": 1552025841972,
+    "timestamp": 1552305207345,
     "session": {
       "target": {
         "ip": "192.168.1.186",
         "protocol": "tcp",
-        "port": 502,
+        "port": 102,
         "ip_p": 6
       }
     },
-    "testname": "AutoScript1552025841972",
+    "testname": "AutoScript1552305207345",
     "description": "Autogen fuzzing script"
   }
 }

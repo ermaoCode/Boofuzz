@@ -11,39 +11,43 @@ def get_priAttr_by_name(primitive, name):
     for primitive_attribute in primitive:
         if primitive_attribute["name"] == name:
             return primitive_attribute
-    print "primitive-type '%s' not found "% (name)
-    sys.exit()
+    print "WARNING: primitive-type '%s' not found !!!"% (name)
+    # sys.exit()
+    return 0
 
 
 def add_primitive(primitive):
     # get the "primitive-type" element of this primitive
-    attr = get_priAttr_by_name(primitive["primitive"], "primitive-type")
+    attr = get_priAttr_by_name(primitive["primitive"], "primitive-type")["default_value"]
 
-    if attr["default_value"] == "static":
-        s_static(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"])
-    elif attr["default_value"] == "delim":
-        s_delim(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
-                fuzzable=(get_priAttr_by_name(primitive["primitive"], "fuzzable")["default_value"] == "True"))
-    elif attr["default_value"] == "string":
-        s_string(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
-                 fuzzable=(get_priAttr_by_name(primitive["primitive"], "fuzzable")["default_value"] == "True"),
+    value = get_priAttr_by_name(primitive["primitive"], "primitive-value")
+    if value != 0:
+        value = value["default_value"]
+        if isinstance(value, unicode):
+            # transmit unicode data ==> byte data      u"\u0001" ==> "\x01"
+            value = value.encode("latin1")
+
+    if attr == "static":
+        s_static(value)
+    elif attr == "delim":
+        s_delim(value,fuzzable=(get_priAttr_by_name(primitive["primitive"], "fuzzable")["default_value"] == "True"))
+    elif attr == "string":
+        s_string(value,fuzzable=(get_priAttr_by_name(primitive["primitive"], "fuzzable")["default_value"] == "True"),
                  max_len=get_priAttr_by_name(primitive["primitive"], "max-length")["default_value"])
-    elif attr["default_value"] == "byte":
-        # s_string(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
+    elif attr == "byte":
+        # s_string(value,
         #         size=get_priAttr_by_name(primitive["primitive"], "width")["default_value"])
-        s_bit_field(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
-                    width=8*get_priAttr_by_name(primitive["primitive"], "width")["default_value"],
+        s_bit_field(value,width=8*get_priAttr_by_name(primitive["primitive"], "width")["default_value"],
                     full_range=(get_priAttr_by_name(primitive["primitive"], "fuzzing-type")["default_value"]=="exhaustive"))
-    elif attr["default_value"] == "random_data":
-        s_random(get_priAttr_by_name(primitive["primitive"], "primitive-value")["default_value"],
-                 min_length=get_priAttr_by_name(primitive["primitive"], "min-width")["default_value"],
+    elif attr == "random_data":
+        s_random(value,min_length=get_priAttr_by_name(primitive["primitive"], "min-width")["default_value"],
                  max_length=get_priAttr_by_name(primitive["primitive"], "max-width")["default_value"],
                  num_mutations=get_priAttr_by_name(primitive["primitive"], "max-mutation")["default_value"])
-    elif attr["default_value"] == "checksum_field":
+    elif attr == "checksum_field":
         s_checksum(get_priAttr_by_name(primitive["primitive"], "target-block")["default_value"],
                    algorithm=get_priAttr_by_name(primitive["primitive"], "checksum-algorithm")["default_value"],
                    endian=">")
-    elif attr["default_value"] == "length_field":
+    elif attr == "length_field":
         s_size(get_priAttr_by_name(primitive["primitive"], "target-block")["default_value"],
                # offset=get_priAttr_by_name(primitive["primitive"], "offset")["default_value"],  # use block name to verify
                length=get_priAttr_by_name(primitive["primitive"], "width")["default_value"],
@@ -67,7 +71,7 @@ def byteify(input):
     elif isinstance(input, list):
         return [byteify(element) for element in input]
     elif isinstance(input, unicode):
-        return input.encode('utf-8')
+        return input.encode('latin1')
     else:
         return input
 
@@ -146,7 +150,7 @@ def main():
                 session.connect(s_get(status["status_name"]))
                 pre_status = status["status_name"]
             else:
-                session.connect(pre_status, s_get(status["status_name"]))
+                session.connect(s_get(pre_status), s_get(status["status_name"]))
                 pre_status = status["status_name"]
 
         if not only_generate:
