@@ -86,7 +86,7 @@ class FuzzLoggerHtmlTable(ifuzz_logger_backend.IFuzzLoggerBackend):
 
         self.prev_result["TestNumber"] = test_case_id
         self.prev_result["TimeStamp"] = get_time_stamp()
-        self.prev_result["Detail"] = '<a href="/gettestdetail/?reportname='+self._report_name+'&caseid='+str(index)+'" target="_blank">'+name+'</a>'
+        self.prev_result["Detail"] = '<a href="/fuzz-gettestdetail/?reportname='+self._report_name+'&caseid='+str(index)+'" target="_blank">'+name+'</a>'
         self.prev_result["SendData"] = ""
         self.prev_result["ReceiveData"] = ""
         self.prev_result["Result"] = "Ok"

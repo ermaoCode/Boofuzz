@@ -11,7 +11,7 @@ def get_priAttr_by_name(primitive, name):
     for primitive_attribute in primitive:
         if primitive_attribute["name"] == name:
             return primitive_attribute
-    print "WARNING: primitive-type '%s' not found !!!"% (name)
+    # print "WARNING: primitive-type '%s' not found !!!"% (name)
     # sys.exit()
     return 0
 

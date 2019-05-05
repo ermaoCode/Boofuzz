@@ -22,7 +22,7 @@ class Size(IFuzzable):
     """
 
     def __init__(self, block_name, request, offset=0, length=4, endian="<", output_format="binary", inclusive=False,
-                 signed=False, math=None, fuzzable=True, name=None):
+                 signed=False, math=None, fuzzable=False, name=None):
         """
         Create a sizer block bound to the block with the specified name. Size blocks that size their own parent or
         grandparent are allowed.

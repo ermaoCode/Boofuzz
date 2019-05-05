@@ -282,7 +282,7 @@ def s_repeat(block_name, min_reps=0, max_reps=None, step=1, variable=None, fuzza
 
 
 def s_size(block_name, offset=0, length=4, endian=LITTLE_ENDIAN, output_format="binary", inclusive=False, signed=False,
-           math=None, fuzzable=True, name=None):
+           math=None, fuzzable=False, name=None):
     """
     Create a sizer block bound to the block with the specified name. You *can not* create a sizer for any
     currently open blocks.

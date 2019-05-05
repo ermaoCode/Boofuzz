@@ -85,7 +85,12 @@ class BitField(BasePrimitive):
 
         if self.full_range:
             # add all possible values.
-            self._fuzz_library_generator = self.infinite_fuzz_data_generator()  # use generator to save memory usage
+            # self._fuzz_library_generator = self.infinite_fuzz_data_generator()  # use generator to save memory usage
+
+            # original
+            for i in range(0, self.max_num):
+                self._fuzz_library.append(i)
+            self._fuzz_library_generator = self.fuzz_data_generator()
 
         else:
             if type(value) in [list, tuple]:
