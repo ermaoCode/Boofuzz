@@ -84,6 +84,7 @@ class FuzzLoggerJson(ifuzz_logger_backend.IFuzzLoggerBackend):
         self.json_result['testFail'] += 1
         self.print_case(self.prev_result)
         self.print_finish()
+        self._file_handle.close()
 
     def log_fail(self, description=""):
         # self._print_log_msg(["fail", "", description])
