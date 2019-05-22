@@ -82,13 +82,18 @@ def main():
     parser.add_argument('--txtlog', help='Text format logging file path, used for displaying and searching detail')
     parser.add_argument('--jsonlog', help='Json format logging file path, used for generation HTML page')
     parser.add_argument('--bindip', help='Ip address for sending')
+    parser.add_argument('--netcardinfo', help='netcard Information')
     parser.add_argument("--onlygenerate", help="A flag, if you turn it on, it will only generate test cases " +
                                                "rather then run the whole test", action="store_true")
     args = parser.parse_args()
 
     bind = None
+    netcardInfo = ""
     if (args.bindip and args.bindip != "0"):
         bind = (args.bindip, 0)
+
+    if args.netcardinfo:
+        netcardInfo = args.netcardinfo
 
     only_generate = 0
     if args.onlygenerate:
@@ -121,7 +126,8 @@ def main():
         json_log_file = open(args.jsonlog, "w+")
 
         # json format output, used for result analysing
-        fuzz_loggers.append(fuzz_logger_json.FuzzLoggerJson(file_handle=json_log_file, report_name=report_name))
+        fuzz_loggers.append(fuzz_logger_json.FuzzLoggerJson(file_handle=json_log_file,
+                                                            report_name=report_name, netcard_info=netcardInfo))
 
     if not fuzz_loggers:
         fuzz_loggers = [fuzz_logger_text.FuzzLoggerText(file_handle=sys.stdout)]

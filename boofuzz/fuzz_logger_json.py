@@ -19,7 +19,7 @@ class FuzzLoggerJson(ifuzz_logger_backend.IFuzzLoggerBackend):
     configured to output to a named file.
     """
 
-    def __init__(self, report_name, file_handle=sys.stdout):
+    def __init__(self, report_name, file_handle=sys.stdout, netcard_info = ""):
         """
         Args:
             file_hanlde (io.TextIOBase): Open file handle for logging. Defaults to sys.stdout.
@@ -37,6 +37,7 @@ class FuzzLoggerJson(ifuzz_logger_backend.IFuzzLoggerBackend):
         self.json_result['beginTime'] = int(round(time.time() * 1000))
 
         self.json_result['totalTime'] = 0
+        self.json_result['natcardInfo'] = netcard_info
 
         self.prev_result = {}
         self.print_start()
