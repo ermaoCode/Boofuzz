@@ -615,8 +615,8 @@ class Session(pgraph.Graph):
                 num_cases_actually_fuzzed += 1
         except KeyboardInterrupt:
             # TODO: should wait for the end of the ongoing test case, and stop gracefully netmon and procmon
-            self.export_file()
             self._fuzz_data_logger.log_error("SIGINT received ... exiting")
+            self.export_file()
             raise
         except sex.BoofuzzRestartFailedError:
             self._fuzz_data_logger.log_error("Restarting the target failed, exiting.")
