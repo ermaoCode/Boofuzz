@@ -333,7 +333,7 @@ class Session(pgraph.Graph):
         self._skip_current_node_after_current_test_case = False
         self._skip_current_element_after_current_test_case = False
 
-        self.web_interface_thread = self.build_webapp_thread(port=self.web_port)
+        # self.web_interface_thread = self.build_webapp_thread(port=self.web_port)
 
         self.total_num_mutations = 0
         self.total_mutant_index = 0
@@ -593,7 +593,7 @@ class Session(pgraph.Graph):
         Returns:
             None
         """
-        self.server_init()
+        # self.server_init()
 
         try:
             num_cases_actually_fuzzed = 0
