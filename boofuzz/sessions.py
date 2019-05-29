@@ -24,6 +24,9 @@ from . import sex
 from . import target_discover
 from .web.app import app
 
+import signal
+import sys
+
 DEFAULT_MAX_RECV = 8192
 
 
@@ -595,6 +598,9 @@ class Session(pgraph.Graph):
         """
         # self.server_init()
 
+        signal.signal(signal.SIGINT, self.signal_close)
+        signal.signal(signal.SIGTERM, self.signal_close)
+
         try:
             num_cases_actually_fuzzed = 0
             for fuzz_args in fuzz_case_iterator:
@@ -633,6 +639,11 @@ class Session(pgraph.Graph):
                 " This error may mean you have no restart method configured, or your error"
                 " detection is not working.")
             self.export_file()
+
+    def signal_close(self, signum, frame):
+        self._fuzz_data_logger.log_error("receved signal ... exiting")
+        self.export_file()
+        sys.exit(0)
 
     def import_file(self):
         """
@@ -1320,7 +1331,7 @@ class Session(pgraph.Graph):
 
         self.export_file()
 
-    def _fuzz_current_case(self, path):
+    def     _fuzz_current_case(self, path):
         """
         Fuzzes the current test case. Current test case is controlled by
         fuzz_case_iterator().

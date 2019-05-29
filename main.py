@@ -87,7 +87,7 @@ def main():
                                                "rather then run the whole test", action="store_true")
     args = parser.parse_args()
 
-    bind = None
+    bind = (0, 0)
     netcardInfo = ""
     if (args.bindip and args.bindip != "0"):
         bind = (args.bindip, 0)

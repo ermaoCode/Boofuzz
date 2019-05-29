@@ -6,13 +6,6 @@ import json
 
 from . import ifuzz_logger_backend
 
-
-
-
-
-
-
-
 class FuzzLoggerJson(ifuzz_logger_backend.IFuzzLoggerBackend):
     """
     This class formats FuzzLogger data for pcap file. It can be
